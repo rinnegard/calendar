@@ -57,8 +57,10 @@ export default function Day({ day, selectedMonth }: DayProps) {
                 </button>
             </div>
             <div className="events">
-                {sortedEvents.map((event) => {
-                    return <EventDetails event={event}></EventDetails>;
+                {sortedEvents.map((event, index) => {
+                    return (
+                        <EventDetails key={index} event={event}></EventDetails>
+                    );
                 })}
             </div>
 

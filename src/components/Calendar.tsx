@@ -29,6 +29,10 @@ export default function Calendar() {
         return eachDayOfInterval({ start: firstWeekStart, end: lastWeekEnd });
     }, [selectedMonth]);
 
+    function resetMonth() {
+        setSelectedMonth(new Date());
+    }
+
     function incrementMonth() {
         setSelectedMonth((prevSelectedMonth) => {
             return new Date(addMonths(prevSelectedMonth, 1));
@@ -44,7 +48,9 @@ export default function Calendar() {
     return (
         <div className="calendar">
             <div className="header">
-                <button className="btn">Today</button>
+                <button onClick={resetMonth} className="btn">
+                    Today
+                </button>
                 <div>
                     <button
                         onClick={decrementMonth}

@@ -14,25 +14,50 @@ import {
     parse,
 } from "date-fns";
 import { useMemo, useState } from "react";
+import Day from "./Day";
 
 export default function Calendar() {
     const [selectedMonth, setSelectedMonth] = useState(new Date());
 
     const calendarDays = useMemo(() => {
-        const firstWeekStart = startOfWeek(startOfMonth(selectedMonth));
-        const lastWeekEnd = endOfWeek(endOfMonth(selectedMonth));
+        const firstWeekStart = startOfWeek(startOfMonth(selectedMonth), {
+            weekStartsOn: 1,
+        });
+        const lastWeekEnd = endOfWeek(endOfMonth(selectedMonth), {
+            weekStartsOn: 1,
+        });
         return eachDayOfInterval({ start: firstWeekStart, end: lastWeekEnd });
     }, [selectedMonth]);
 
-    console.log(calendarDays);
+    function incrementMonth() {
+        setSelectedMonth((prevSelectedMonth) => {
+            return new Date(addMonths(prevSelectedMonth, 1));
+        });
+    }
+
+    function decrementMonth() {
+        setSelectedMonth((prevSelectedMonth) => {
+            return new Date(subMonths(prevSelectedMonth, 1));
+        });
+    }
 
     return (
         <div className="calendar">
             <div className="header">
                 <button className="btn">Today</button>
                 <div>
-                    <button className="month-change-btn">&lt;</button>
-                    <button className="month-change-btn">&gt;</button>
+                    <button
+                        onClick={decrementMonth}
+                        className="month-change-btn"
+                    >
+                        &lt;
+                    </button>
+                    <button
+                        onClick={incrementMonth}
+                        className="month-change-btn"
+                    >
+                        &gt;
+                    </button>
                 </div>
                 <span className="month-title">
                     {`${selectedMonth.toLocaleString(undefined, {
@@ -43,21 +68,7 @@ export default function Calendar() {
             </div>
             <div className="days">
                 {calendarDays.map((day) => {
-                    return (
-                        <div className="day">
-                            <div className="day-header">
-                                <div className="week-name">
-                                    {day.toLocaleString(undefined, {
-                                        weekday: "short",
-                                    })}
-                                </div>
-                                <div className="day-number">
-                                    {day.getDate()}
-                                </div>
-                                <button className="add-event-btn">+</button>
-                            </div>
-                        </div>
-                    );
+                    return <Day day={day} />;
                 })}
             </div>
         </div>

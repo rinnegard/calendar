@@ -31,14 +31,13 @@ export default function Day({ day, selectedMonth }: DayProps) {
                     +
                 </button>
             </div>
-            {showAddModal ? (
+            {showAddModal && (
                 <AddEventModal
+                    date={day}
                     closeModal={() => {
                         setShowAddModal(false);
                     }}
                 ></AddEventModal>
-            ) : (
-                <div>hiding</div>
             )}
         </div>
     );

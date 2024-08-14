@@ -1,17 +1,27 @@
 import { createPortal } from "react-dom";
 
 type AddEventModalProps = {
+    date: Date;
     closeModal: () => void;
 };
 
-export default function AddEventModal({ closeModal }: AddEventModalProps) {
+export default function AddEventModal({
+    date,
+    closeModal,
+}: AddEventModalProps) {
     return createPortal(
         <div className="modal">
             <div className="overlay"></div>
             <div className="modal-body">
                 <div className="modal-title">
                     <div>Add Event</div>
-                    <small>6/8/23</small>
+                    <small>
+                        {date.toLocaleDateString(undefined, {
+                            year: "2-digit",
+                            month: "2-digit",
+                            day: "2-digit",
+                        })}
+                    </small>
                     <button onClick={closeModal} className="close-btn">
                         &times;
                     </button>
@@ -86,6 +96,6 @@ export default function AddEventModal({ closeModal }: AddEventModalProps) {
                 </form>
             </div>
         </div>,
-        document.body
+        document.querySelector("#modal-container") as HTMLElement
     );
 }

@@ -67,8 +67,14 @@ export default function Calendar() {
                 </span>
             </div>
             <div className="days">
-                {calendarDays.map((day) => {
-                    return <Day day={day} selectedMonth={selectedMonth} />;
+                {calendarDays.map((day, index) => {
+                    return (
+                        <Day
+                            key={index}
+                            day={day}
+                            selectedMonth={selectedMonth}
+                        />
+                    );
                 })}
             </div>
         </div>

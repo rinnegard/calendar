@@ -1,12 +1,14 @@
 import { isSameMonth, isToday } from "date-fns";
+import { useState } from "react";
+import AddEventModal from "./AddEventModal";
 
-export default function Day({
-    day,
-    selectedMonth,
-}: {
+type DayProps = {
     day: Date;
     selectedMonth: Date;
-}) {
+};
+
+export default function Day({ day, selectedMonth }: DayProps) {
+    const [showAddModal, setShowAddModal] = useState(false);
     return (
         <div
             className={`day ${
@@ -22,8 +24,22 @@ export default function Day({
                 <div className={`day-number ${isToday(day) && "today"}`}>
                     {day.getDate()}
                 </div>
-                <button className="add-event-btn">+</button>
+                <button
+                    onClick={() => setShowAddModal(true)}
+                    className="add-event-btn"
+                >
+                    +
+                </button>
             </div>
+            {showAddModal ? (
+                <AddEventModal
+                    closeModal={() => {
+                        setShowAddModal(false);
+                    }}
+                ></AddEventModal>
+            ) : (
+                <div>hiding</div>
+            )}
         </div>
     );
 }

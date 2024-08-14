@@ -1,4 +1,6 @@
+import { FormEvent, useContext, useRef } from "react";
 import { createPortal } from "react-dom";
+import { Event, EventContext } from "../App";
 
 type AddEventModalProps = {
     date: Date;
@@ -9,6 +11,35 @@ export default function AddEventModal({
     date,
     closeModal,
 }: AddEventModalProps) {
+    const nameRef = useRef<HTMLInputElement>(null);
+    const allDayRef = useRef<HTMLInputElement>(null);
+    const startTimeRef = useRef<HTMLInputElement>(null);
+    const endTimeRef = useRef<HTMLInputElement>(null);
+
+    const events = useContext(EventContext);
+
+    function handleSubmit(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+
+        if (nameRef.current == undefined || allDayRef.current == undefined) {
+            return;
+        }
+
+        const newEvent: Event = {
+            id: crypto.randomUUID(),
+            date: date,
+            name: nameRef.current?.value,
+            allDay: allDayRef.current?.checked,
+            startTime: startTimeRef.current?.value,
+            endTime: endTimeRef.current?.value,
+            color: "red",
+        };
+
+        events?.addEvent(newEvent);
+
+        closeModal();
+    }
+
     return createPortal(
         <div className="modal">
             <div className="overlay"></div>
@@ -26,19 +57,30 @@ export default function AddEventModal({
                         &times;
                     </button>
                 </div>
-                <form>
+                <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="name">Name</label>
-                        <input type="text" name="name" id="name" />
+                        <input
+                            ref={nameRef}
+                            type="text"
+                            name="name"
+                            id="name"
+                        />
                     </div>
                     <div className="form-group checkbox">
-                        <input type="checkbox" name="all-day" id="all-day" />
+                        <input
+                            ref={allDayRef}
+                            type="checkbox"
+                            name="all-day"
+                            id="all-day"
+                        />
                         <label htmlFor="all-day">All Day?</label>
                     </div>
                     <div className="row">
                         <div className="form-group">
                             <label htmlFor="start-time">Start Time</label>
                             <input
+                                ref={startTimeRef}
                                 type="time"
                                 name="start-time"
                                 id="start-time"
@@ -46,7 +88,12 @@ export default function AddEventModal({
                         </div>
                         <div className="form-group">
                             <label htmlFor="end-time">End Time</label>
-                            <input type="time" name="end-time" id="end-time" />
+                            <input
+                                ref={endTimeRef}
+                                type="time"
+                                name="end-time"
+                                id="end-time"
+                            />
                         </div>
                     </div>
                     <div className="form-group">
@@ -57,7 +104,6 @@ export default function AddEventModal({
                                 name="color"
                                 value="blue"
                                 id="blue"
-                                checked
                                 className="color-radio"
                             />
                             <label htmlFor="blue">
@@ -88,9 +134,6 @@ export default function AddEventModal({
                     <div className="row">
                         <button className="btn btn-success" type="submit">
                             Add
-                        </button>
-                        <button className="btn btn-delete" type="button">
-                            Delete
                         </button>
                     </div>
                 </form>

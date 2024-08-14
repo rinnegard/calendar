@@ -1,6 +1,7 @@
-import { isSameMonth, isToday } from "date-fns";
-import { useState } from "react";
+import { isSameMonth, isToday, isSameDay } from "date-fns";
+import { useContext, useState } from "react";
 import AddEventModal from "./AddEventModal";
+import { EventContext } from "../App";
 
 type DayProps = {
     day: Date;
@@ -9,6 +10,14 @@ type DayProps = {
 
 export default function Day({ day, selectedMonth }: DayProps) {
     const [showAddModal, setShowAddModal] = useState(false);
+    const { events } = useContext(EventContext);
+
+    const thisDayEvents = events.filter((event) => {
+        if (isSameDay(event.date, day)) {
+            return event;
+        }
+    });
+
     return (
         <div
             className={`day ${
@@ -31,6 +40,22 @@ export default function Day({ day, selectedMonth }: DayProps) {
                     +
                 </button>
             </div>
+            <div className="events">
+                {thisDayEvents.map((event) => {
+                    return event.allDay ? (
+                        <button className="all-day-event blue event">
+                            <div className="event-name">{event.name}</div>
+                        </button>
+                    ) : (
+                        <button className="event">
+                            <div className={`color-dot ${event.color}`}></div>
+                            <div className="event-time">{event.startTime}</div>
+                            <div className="event-name">{event.name}</div>
+                        </button>
+                    );
+                })}
+            </div>
+
             {showAddModal && (
                 <AddEventModal
                     date={day}

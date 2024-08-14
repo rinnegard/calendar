@@ -2,6 +2,7 @@ import { isSameMonth, isToday, isSameDay } from "date-fns";
 import { useContext, useState } from "react";
 import AddEventModal from "./AddEventModal";
 import { EventContext } from "../App";
+import EventDetails from "./EventDetails";
 
 type DayProps = {
     day: Date;
@@ -57,17 +58,7 @@ export default function Day({ day, selectedMonth }: DayProps) {
             </div>
             <div className="events">
                 {sortedEvents.map((event) => {
-                    return event.allDay ? (
-                        <button className="all-day-event blue event">
-                            <div className="event-name">{event.name}</div>
-                        </button>
-                    ) : (
-                        <button className="event">
-                            <div className={`color-dot ${event.color}`}></div>
-                            <div className="event-time">{event.startTime}</div>
-                            <div className="event-name">{event.name}</div>
-                        </button>
-                    );
+                    return <EventDetails event={event}></EventDetails>;
                 })}
             </div>
 

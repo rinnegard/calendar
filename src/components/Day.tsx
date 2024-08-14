@@ -13,10 +13,25 @@ export default function Day({ day, selectedMonth }: DayProps) {
     const { events } = useContext(EventContext);
 
     const thisDayEvents = events.filter((event) => {
-        if (isSameDay(event.date, day)) {
-            return event;
-        }
+        return isSameDay(event.date, day);
     });
+
+    const fullDayEvents = thisDayEvents.filter((event) => {
+        return event.allDay;
+    });
+
+    const partialDayEvents = thisDayEvents
+        .filter((event) => {
+            return !event.allDay;
+        })
+        .sort((a, b) => {
+            if (a.startTime == undefined || b.startTime == undefined) {
+                return 0;
+            }
+            return a.startTime?.localeCompare(b.startTime);
+        });
+
+    const sortedEvents = [...fullDayEvents, ...partialDayEvents];
 
     return (
         <div
@@ -41,7 +56,7 @@ export default function Day({ day, selectedMonth }: DayProps) {
                 </button>
             </div>
             <div className="events">
-                {thisDayEvents.map((event) => {
+                {sortedEvents.map((event) => {
                     return event.allDay ? (
                         <button className="all-day-event blue event">
                             <div className="event-name">{event.name}</div>

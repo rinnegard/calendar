@@ -4,14 +4,14 @@ import {
     endOfWeek,
     endOfMonth,
     eachDayOfInterval,
-    isSameMonth,
-    isBefore,
-    endOfDay,
-    isToday,
+    // isSameMonth,
+    // isBefore,
+    // endOfDay,
+    // isToday,
     subMonths,
     addMonths,
-    isSameDay,
-    parse,
+    // isSameDay,
+    // parse,
 } from "date-fns";
 import { useMemo, useState } from "react";
 import Day from "./Day";
@@ -68,7 +68,7 @@ export default function Calendar() {
             </div>
             <div className="days">
                 {calendarDays.map((day) => {
-                    return <Day day={day} />;
+                    return <Day day={day} selectedMonth={selectedMonth} />;
                 })}
             </div>
         </div>

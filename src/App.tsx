@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import Calendar from "./components/Calendar";
 import "./styles.css";
 
@@ -23,7 +23,20 @@ export const EventContext = createContext<EventContextType>({
 });
 
 function App() {
-    const [events, setEvents] = useState<Event[]>([]);
+    const [events, setEvents] = useState<Event[]>(() => {
+        const data = localStorage.getItem("events");
+
+        if (data === null) {
+            return [];
+        }
+
+        return JSON.parse(data);
+    });
+
+    useEffect(() => {
+        localStorage.setItem("events", JSON.stringify(events));
+    }, [events]);
+
     return (
         <EventContext.Provider
             value={{

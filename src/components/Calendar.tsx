@@ -13,11 +13,27 @@ import {
     // isSameDay,
     // parse,
 } from "date-fns";
-import { useMemo, useState } from "react";
+import { useMemo, useReducer } from "react";
 import Day from "./Day";
 
+type ActionTypes = "addMonth" | "removeMonth" | "reset";
+
+function reducer(state: Date, action: { type: ActionTypes }) {
+    switch (action.type) {
+        case "addMonth":
+            return new Date(addMonths(state, 1));
+        case "removeMonth":
+            return new Date(subMonths(state, 1));
+        case "reset":
+            return new Date();
+        default:
+            throw new Error("No action found");
+    }
+}
+
 export default function Calendar() {
-    const [selectedMonth, setSelectedMonth] = useState(new Date());
+    // const [selectedMonth, setSelectedMonth] = useState(new Date());
+    const [selectedMonth, dispatch] = useReducer(reducer, new Date());
 
     const calendarDays = useMemo(() => {
         const firstWeekStart = startOfWeek(startOfMonth(selectedMonth), {
@@ -29,37 +45,30 @@ export default function Calendar() {
         return eachDayOfInterval({ start: firstWeekStart, end: lastWeekEnd });
     }, [selectedMonth]);
 
-    function resetMonth() {
-        setSelectedMonth(new Date());
-    }
-
-    function incrementMonth() {
-        setSelectedMonth((prevSelectedMonth) => {
-            return new Date(addMonths(prevSelectedMonth, 1));
-        });
-    }
-
-    function decrementMonth() {
-        setSelectedMonth((prevSelectedMonth) => {
-            return new Date(subMonths(prevSelectedMonth, 1));
-        });
-    }
-
     return (
         <div className="calendar">
             <div className="header">
-                <button onClick={resetMonth} className="btn">
+                <button
+                    onClick={() => {
+                        dispatch({ type: "reset" });
+                    }}
+                    className="btn"
+                >
                     Today
                 </button>
                 <div>
                     <button
-                        onClick={decrementMonth}
+                        onClick={() => {
+                            dispatch({ type: "removeMonth" });
+                        }}
                         className="month-change-btn"
                     >
                         &lt;
                     </button>
                     <button
-                        onClick={incrementMonth}
+                        onClick={() => {
+                            dispatch({ type: "addMonth" });
+                        }}
                         className="month-change-btn"
                     >
                         &gt;

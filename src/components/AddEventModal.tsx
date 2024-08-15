@@ -139,7 +139,9 @@ export default function AddEventModal({
                                 id="green"
                                 className="color-radio"
                                 onChange={(e: FormEvent<HTMLInputElement>) => {
-                                    setSelectedColor(e.currentTarget.value);
+                                    setSelectedColor(
+                                        e.currentTarget.value as Colors
+                                    );
                                 }}
                             />
                             <label htmlFor="green">

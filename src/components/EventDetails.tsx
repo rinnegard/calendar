@@ -2,7 +2,7 @@ import { Event } from "../App";
 
 export default function EventDetails({ event }: { event: Event }) {
     return event.allDay ? (
-        <button className="all-day-event blue event">
+        <button className={`all-day-event event ${event.color}`}>
             <div className="event-name">{event.name}</div>
         </button>
     ) : (

@@ -1,4 +1,4 @@
-import { FormEvent, useContext, useRef } from "react";
+import { FormEvent, useContext, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Event, EventContext } from "../App";
 
@@ -6,6 +6,8 @@ type AddEventModalProps = {
     date: Date;
     closeModal: () => void;
 };
+
+type Colors = "red" | "blue" | "green";
 
 export default function AddEventModal({
     date,
@@ -15,6 +17,7 @@ export default function AddEventModal({
     const allDayRef = useRef<HTMLInputElement>(null);
     const startTimeRef = useRef<HTMLInputElement>(null);
     const endTimeRef = useRef<HTMLInputElement>(null);
+    const [selectedColor, setSelectedColor] = useState<Colors>("red");
 
     const events = useContext(EventContext);
 
@@ -32,7 +35,7 @@ export default function AddEventModal({
             allDay: allDayRef.current?.checked,
             startTime: startTimeRef.current?.value,
             endTime: endTimeRef.current?.value,
-            color: "red",
+            color: selectedColor,
         };
 
         events?.addEvent(newEvent);
@@ -105,6 +108,11 @@ export default function AddEventModal({
                                 value="blue"
                                 id="blue"
                                 className="color-radio"
+                                onChange={(e: FormEvent<HTMLInputElement>) => {
+                                    setSelectedColor(
+                                        e.currentTarget.value as Colors
+                                    );
+                                }}
                             />
                             <label htmlFor="blue">
                                 <span className="sr-only">Blue</span>
@@ -115,6 +123,11 @@ export default function AddEventModal({
                                 value="red"
                                 id="red"
                                 className="color-radio"
+                                onChange={(e: FormEvent<HTMLInputElement>) => {
+                                    setSelectedColor(
+                                        e.currentTarget.value as Colors
+                                    );
+                                }}
                             />
                             <label htmlFor="red">
                                 <span className="sr-only">Red</span>
@@ -125,6 +138,9 @@ export default function AddEventModal({
                                 value="green"
                                 id="green"
                                 className="color-radio"
+                                onChange={(e: FormEvent<HTMLInputElement>) => {
+                                    setSelectedColor(e.currentTarget.value);
+                                }}
                             />
                             <label htmlFor="green">
                                 <span className="sr-only">Green</span>
